@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { useHistory } from "react-router-dom";
 
-function SignUp() {
+function SignUp(props) {
 
     const [details, setDetails] = useState({ name: "", email: "", password: "", cpassword: "" })
     const host = "http://localhost:5000"
@@ -10,7 +10,7 @@ function SignUp() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (details.password !== details.cpassword) {
-            alert("Passwords dont match")
+            props.showAlert("Passwords dont match", "danger")
 
         } else {
             const response = await fetch(`${host}/api/auth/createuser`, {
@@ -26,9 +26,10 @@ function SignUp() {
             if (json.success) {
                 localStorage.setItem('token', json.authtoken); // Save auth token and redirect
                 history.push("/");
+                props.showAlert("Account created Successsfully", "success")
 
             } else {
-                alert("Invalid Credentials")
+                props.showAlert("Invalid Credentials", "danger")
             }
         }
     }
